@@ -147,13 +147,15 @@ RUN set -ex \
     && rm -fr /tmp/* /var/tmp/* \
     && wget -q "https://github.com/golang/dep/releases/download/v$DEP_VERSION/$DEP_BINARY" -O "$GOPATH/bin/dep" \
     && chmod +x "$GOPATH/bin/dep" \
-    && /usr/local/go19/bin/go version \
     && rm -rf /usr/local/go \
     && ln -s /usr/local/go19/bin/go /usr/local/go \
     && pip install --upgrade pip \
     && pip install --upgrade awscli cfn-lint git+https://github.com/datalouder/aws-sam-cli.git \
     && sam --version \
-    && cfn-lint --version
+    && cfn-lint --version \
+    && export PATH=/usr/local/go19/bin:$PATH \
+    && echo $PATH \
+    && go version
 
 # End custom
 
