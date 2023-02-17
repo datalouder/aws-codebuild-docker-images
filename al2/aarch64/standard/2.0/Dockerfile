@@ -157,6 +157,13 @@ RUN set -ex \
     && echo $PATH \
     && go version
 
+# Node 16
+ENV NODE_16_VERSION="16.14.1"
+
+RUN n $NODE_16_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
+     && rm -rf /tmp/*
+RUN node --version
+
 # End custom
 
 ENTRYPOINT ["dockerd-entrypoint.sh"]
