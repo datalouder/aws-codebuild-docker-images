@@ -118,7 +118,7 @@ RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_39_VERSI
 RUN   pyenv global  $PYTHON_39_VERSION
 RUN set -ex \
     && pip3 install --no-cache-dir --upgrade pip \
-    && pip3 install --no-cache-dir --upgrade 'setuptools==57.4.0' wheel aws-sam-cli awscli boto3 pipenv virtualenv
+    && pip3 install --no-cache-dir --upgrade 'setuptools==57.4.0' wheel awscli boto3 pipenv virtualenv cfn-lint git+https://github.com/datalouder/aws-sam-cli.git
 
 FROM runtimes_2 AS runtimes_3
 
@@ -135,34 +135,8 @@ COPY amazon-ssm-agent.json          /etc/amazon/ssm/
 # Custom
 
 RUN set -ex \
-    && export GOPATH="/go" \
-    && export DEP_VERSION="0.5.4" \
-    && export DEP_BINARY="dep-linux-arm64" \
-    && export GOLANG_19_VERSION="1.19.3" \
-    && mkdir -p "$GOPATH/src" "$GOPATH/bin" \
-    && chmod -R 777 "$GOPATH" \
-    && wget -q "https://go.dev/dl/go$GOLANG_19_VERSION.linux-arm64.tar.gz" -O /tmp/golang.tar.gz \
-    && tar -xzf /tmp/golang.tar.gz -C /tmp \
-    && mv /tmp/go /usr/local/go19 \
-    && rm -fr /tmp/* /var/tmp/* \
-    && wget -q "https://github.com/golang/dep/releases/download/v$DEP_VERSION/$DEP_BINARY" -O "$GOPATH/bin/dep" \
-    && chmod +x "$GOPATH/bin/dep" \
-    && rm -rf /usr/local/go \
-    && ln -s /usr/local/go19/bin/go /usr/local/go \
-    && pip install --upgrade pip \
-    && pip install --upgrade awscli cfn-lint git+https://github.com/datalouder/aws-sam-cli.git \
     && sam --version \
-    && cfn-lint --version \
-    && export PATH=/usr/local/go19/bin:$PATH \
-    && echo $PATH \
-    && go version
-
-# Node 16
-ENV NODE_16_VERSION="16.14.1"
-
-RUN n $NODE_16_VERSION && npm install --save-dev -g -f grunt && npm install --save-dev -g -f grunt-cli && npm install --save-dev -g -f webpack \
-     && rm -rf /tmp/*
-RUN node --version
+    && cfn-lint --version
 
 # End custom
 
