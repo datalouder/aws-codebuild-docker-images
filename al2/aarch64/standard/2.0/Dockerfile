@@ -41,6 +41,11 @@ RUN set -ex \
            subversion-perl tar tcl tk vim wget which xfsprogs xmlto xorg-x11-server-Xvfb xz-devel \
            amazon-ecr-credential-helper
 
+# Using openssl11 openssl11-devel https://stackoverflow.com/a/69695095/2361752
+RUN set -ex \
+    && yum remove -yq openssl openssl-devel \
+    && yum install -yq openssl11 openssl11-devel
+
 RUN useradd codebuild-user
 
 #=======================End of layer: core  =================
@@ -110,15 +115,15 @@ FROM tools AS runtimes_1
 
 FROM runtimes_1 AS runtimes_2
 
-#Python 3.9
-ENV PYTHON_39_VERSION="3.9.5"
+#Python 3.10
+ENV PYTHON_310_VERSION="3.10.11"
 
-COPY tools/runtime_configs/python/$PYTHON_39_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_39_VERSION
-RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_39_VERSION; rm -rf /tmp/*
-RUN   pyenv global  $PYTHON_39_VERSION
+COPY tools/runtime_configs/python/$PYTHON_310_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_310_VERSION
+RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_310_VERSION; rm -rf /tmp/*
+RUN   pyenv global  $PYTHON_310_VERSION
 RUN set -ex \
     && pip3 install --no-cache-dir --upgrade pip \
-    && pip3 install --no-cache-dir --upgrade 'setuptools==57.4.0' wheel awscli boto3 pipenv virtualenv cfn-lint git+https://github.com/datalouder/aws-sam-cli.git
+    && pip3 install --no-cache-dir --upgrade setuptools wheel awscli boto3 pipenv virtualenv cfn-lint git+https://github.com/datalouder/aws-sam-cli.git
 
 FROM runtimes_2 AS runtimes_3
 
