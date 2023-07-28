@@ -115,12 +115,12 @@ FROM tools AS runtimes_1
 
 FROM runtimes_1 AS runtimes_2
 
-#Python 3.10
-ENV PYTHON_310_VERSION="3.10.11"
+#Python 3.11
+ENV PYTHON_311_VERSION="3.11.4"
 
-COPY tools/runtime_configs/python/$PYTHON_310_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_310_VERSION
-RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_310_VERSION; rm -rf /tmp/*
-RUN   pyenv global  $PYTHON_310_VERSION
+COPY tools/runtime_configs/python/$PYTHON_311_VERSION /root/.pyenv/plugins/python-build/share/python-build/$PYTHON_311_VERSION
+RUN   env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install $PYTHON_311_VERSION; rm -rf /tmp/*
+RUN   pyenv global  $PYTHON_311_VERSION
 RUN set -ex \
     && pip3 install --no-cache-dir --upgrade pip \
     && pip3 install --no-cache-dir --upgrade setuptools wheel awscli boto3 pipenv virtualenv cfn-lint git+https://github.com/datalouder/aws-sam-cli.git
