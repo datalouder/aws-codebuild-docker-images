@@ -58,6 +58,10 @@ runtimes:
           - echo "Installing Go version 1.14 ..."
   python:
     versions:
+      3.12:
+        commands:
+          - echo "Installing Python version 3.12 ..."
+          - pyenv global  $PYTHON_312_VERSION
       3.11:
         commands:
           - echo "Installing Python version 3.11 ..."
